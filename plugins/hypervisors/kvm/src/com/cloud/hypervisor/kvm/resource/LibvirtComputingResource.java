@@ -3094,8 +3094,13 @@ public class LibvirtComputingResource extends ServerResourceBase implements Serv
                 description for the instance to be used on the target host.
 
                 This is supported by libvirt-java from version 0.50.0
+
+                CVE-2015-3252: Export the XML description with the security information
+                to prevent the VNC console from being unsecured after migration.  In order
+                to export security information, include 1 in the list flags passed to
+                getXMLDesc(...).
              */
-            xmlDesc = dm.getXMLDesc(0).replace(_privateIp, cmd.getDestinationIp());
+            xmlDesc = dm.getXMLDesc(1).replace(_privateIp, cmd.getDestinationIp());
 
             dconn = new Connect("qemu+tcp://" + cmd.getDestinationIp() + "/system");
 
