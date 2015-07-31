@@ -454,4 +454,52 @@ public class LibvirtComputingResourceTest {
         NodeInfo nodeInfo = Mockito.mock(NodeInfo.class);
         LibvirtComputingResource.getCpuSpeed(nodeInfo);
     }
+
+    @Test
+    public void testInsertVNCPasswordSingleGraphicElement() {
+
+        final String password = "drowssap";
+        final String input = "<domain><devices><graphics type='vnc' port='-1' autoport='yes' " +
+                "keymap='en-us'/></devices></domain>";
+        final String expected = String.format("<domain><devices><graphics autoport=\"yes\" keymap=\"en-us\" passwd=\"%1$s\" " +
+                "port=\"-1\" type=\"vnc\"/></devices></domain>", password);
+
+        final String actual = LibvirtComputingResource.insertVNCPasswordIntoDomainXML(input, password);
+
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void testInsertVNCPasswordMultipleGraphicElements() {
+
+        final String password = "drowssap";
+        final String input = "<domain><devices><graphics type='vnc' port='-1' autoport='yes' " +
+                "keymap='en-us'/><graphics type='vnc' port='-1' autoport='yes' " +
+                "keymap='en-us'/></devices></domain>";
+        final String expected = String.format("<domain><devices><graphics autoport=\"yes\" keymap=\"en-us\" passwd=\"%1$s\" " +
+                "port=\"-1\" type=\"vnc\"/><graphics autoport=\"yes\" keymap=\"en-us\" passwd=\"%1$s\" " +
+                "port=\"-1\" type=\"vnc\"/></devices></domain>", password);
+
+        final String actual = LibvirtComputingResource.insertVNCPasswordIntoDomainXML(input, password);
+
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void testInsertVNCPasswordNoChanges() {
+
+        final String input = "<domain><devices><graphics type='vnc' port='-1' autoport='yes' " +
+                "keymap='en-us' passwd='drowpass'/></devices></domain>";
+        final String expected = "<domain><devices><graphics autoport=\"yes\" keymap=\"en-us\" passwd=\"drowpass\" " +
+                "port=\"-1\" type=\"vnc\"/></devices></domain>";
+
+        final String actual = LibvirtComputingResource.insertVNCPasswordIntoDomainXML(input, "foobar");
+
+        assertEquals(expected, actual);
+
+    }
+
 }
+
