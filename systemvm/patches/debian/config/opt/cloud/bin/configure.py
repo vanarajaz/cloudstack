@@ -483,13 +483,13 @@ class CsSite2SiteVpn(CsDataBag):
 
     def deletevpn(self, ip):
         logging.info("Removing VPN configuration for %s", ip)
-        CsHelper.execute("ipsec auto --down vpn-%s" % ip)
-        CsHelper.execute("ipsec auto --delete vpn-%s" % ip)
+        CsHelper.execute("ipsec down vpn-%s" % ip)
+        CsHelper.execute("ipsec down vpn-%s" % ip)
         vpnconffile = "%s/ipsec.vpn-%s.conf" % (self.VPNCONFDIR, ip)
         vpnsecretsfile = "%s/ipsec.vpn-%s.secrets" % (self.VPNCONFDIR, ip)
         os.remove(vpnconffile)
         os.remove(vpnsecretsfile)
-        CsHelper.execute("ipsec auto --rereadall")
+        CsHelper.execute("ipsec reload")
 
     def configure_iptables(self, dev, obj):
         self.fw.append(["", "front", "-A INPUT -i %s -p udp -m udp --dport 500 -s %s -d %s -j ACCEPT" % (dev, obj['peer_gateway_ip'], obj['local_public_ip'])])
@@ -515,19 +515,20 @@ class CsSite2SiteVpn(CsDataBag):
         if rightpeer in self.confips:
             self.confips.remove(rightpeer)
         file = CsFile(vpnconffile)
+        file.add("#conn for vpn-%s" % rightpeer, 0)
         file.search("conn ", "conn vpn-%s" % rightpeer)
         file.addeq(" left=%s" % leftpeer)
         file.addeq(" leftsubnet=%s" % obj['local_guest_cidr'])
         file.addeq(" leftnexthop=%s" % obj['local_public_gateway'])
         file.addeq(" right=%s" % rightpeer)
-        file.addeq(" rightsubnets={%s}" % peerlist)
+        file.addeq(" rightsubnet=%s" % peerlist)
         file.addeq(" type=tunnel")
         file.addeq(" authby=secret")
         file.addeq(" keyexchange=ike")
         file.addeq(" ike=%s" % obj['ike_policy'])
         file.addeq(" ikelifetime=%s" % self.convert_sec_to_h(obj['ike_lifetime']))
         file.addeq(" esp=%s" % obj['esp_policy'])
-        file.addeq(" salifetime=%s" % self.convert_sec_to_h(obj['esp_lifetime']))
+        file.addeq(" lifetime=%s" % self.convert_sec_to_h(obj['esp_lifetime']))
         file.addeq(" pfs=%s" % CsHelper.bool_to_yn(obj['dpd']))
         file.addeq(" keyingtries=2")
         file.addeq(" auto=start")
@@ -542,11 +543,11 @@ class CsSite2SiteVpn(CsDataBag):
             secret.commit()
             file.commit()
             logging.info("Configured vpn %s %s", leftpeer, rightpeer)
-            CsHelper.execute("ipsec auto --rereadall")
-            CsHelper.execute("ipsec auto --add vpn-%s" % rightpeer)
+            CsHelper.execute("ipsec reload")
+            #CsHelper.execute("ipsec --add vpn-%s" % rightpeer)
             if not obj['passive']:
-                CsHelper.execute("ipsec auto --up vpn-%s" % rightpeer)
-        os.chmod(vpnsecretsfile, 0o400)
+                CsHelper.execute("ipsec up vpn-%s" % rightpeer)
+        os.chmod(vpnsecretsfile, 0400)
 
     def convert_sec_to_h(self, val):
         hrs = int(val) / 3600
