@@ -524,7 +524,7 @@ class CsSite2SiteVpn(CsDataBag):
         file.addeq(" rightsubnet=%s" % peerlist)
         file.addeq(" type=tunnel")
         file.addeq(" authby=secret")
-        file.addeq(" keyexchange=ike")
+        file.addeq(" keyexchange=ikev1")
         file.addeq(" ike=%s" % obj['ike_policy'])
         file.addeq(" ikelifetime=%s" % self.convert_sec_to_h(obj['ike_lifetime']))
         file.addeq(" esp=%s" % obj['esp_policy'])
