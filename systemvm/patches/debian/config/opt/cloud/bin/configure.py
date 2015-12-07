@@ -635,7 +635,8 @@ class CsRemoteAccessVpn(CsDataBag):
                 logging.debug("Remote accessvpn  data bag %s",  self.dbag)
                 self.remoteaccessvpn_iptables(public_ip, self.dbag[public_ip])
 
-                CsHelper.execute("ipsec reload")
+                CsHelper.execute("ipsec down L2TP-PSK")
+                CsHelper.execute("ipsec update")
                 CsHelper.execute("service xl2tpd stop")
                 CsHelper.execute("service xl2tpd start")
                 CsHelper.execute("ipsec rereadsecrets")
@@ -647,12 +648,12 @@ class CsRemoteAccessVpn(CsDataBag):
 
 
     def configure_l2tpIpsec(self, left,  obj):
-        vpnconffile="%s/l2tp.conf" % (self.VPNCONFDIR)
+        l2tpconffile="%s/l2tp.conf" % (self.VPNCONFDIR)
         vpnsecretfilte="%s/ipsec.any.secrets" % (self.VPNCONFDIR)
         xl2tpdconffile="/etc/xl2tpd/xl2tpd.conf"
         xl2tpoptionsfile='/etc/ppp/options.xl2tpd'
 
-        file = CsFile(vpnconffile)
+        file = CsFile(l2tpconffile)
         localip=obj['local_ip']
         localcidr=obj['local_cidr']
         publicIface=obj['public_interface']
