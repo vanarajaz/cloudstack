@@ -660,8 +660,12 @@ class CsRemoteAccessVpn(CsDataBag):
         iprange=obj['ip_range']
         psk=obj['preshared_key']
 
+        rightsubnet = iprange.split('-')[0]
+        rightsubnet = rightsubnet+"/8"
+
         #left
         file.addeq(" left=%s" % left)
+        file.addeq(" rightsubnetwithin=%s" % rightsubnet)
         file.commit()
 
 
