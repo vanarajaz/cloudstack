@@ -512,6 +512,15 @@ class CsSite2SiteVpn(CsDataBag):
         peerlist = obj['peer_guest_cidr_list'].lstrip().rstrip().replace(',', ' ')
         vpnconffile = "%s/ipsec.vpn-%s.conf" % (self.VPNCONFDIR, rightpeer)
         vpnsecretsfile = "%s/ipsec.vpn-%s.secrets" % (self.VPNCONFDIR, rightpeer)
+        ikepolicy=obj['ike_policy']
+        ikepolicy=ikepolicy.replace(';','-')
+        esppolicy=obj['esp_policy']
+        esppolicy=esppolicy.replace(';','-')
+
+        pfs='yes'
+        if (esppolicy.rfind('modp') == -1):
+            pfs='no'
+
         if rightpeer in self.confips:
             self.confips.remove(rightpeer)
         file = CsFile(vpnconffile)
@@ -525,11 +534,11 @@ class CsSite2SiteVpn(CsDataBag):
         file.addeq(" type=tunnel")
         file.addeq(" authby=secret")
         file.addeq(" keyexchange=ikev1")
-        file.addeq(" ike=%s" % obj['ike_policy'])
+        file.addeq(" ike=%s" % ikepolicy)
         file.addeq(" ikelifetime=%s" % self.convert_sec_to_h(obj['ike_lifetime']))
-        file.addeq(" esp=%s" % obj['esp_policy'])
+        file.addeq(" esp=%s" % esppolicy)
         file.addeq(" lifetime=%s" % self.convert_sec_to_h(obj['esp_lifetime']))
-        file.addeq(" pfs=%s" % CsHelper.bool_to_yn(obj['dpd']))
+        file.addeq(" pfs=%s" % pfs)
         file.addeq(" keyingtries=2")
         file.addeq(" auto=start")
         file.addeq(" forceencaps=%s" % CsHelper.bool_to_yn(obj['encap']))
