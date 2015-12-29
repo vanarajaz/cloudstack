@@ -555,7 +555,7 @@ class CsSite2SiteVpn(CsDataBag):
             CsHelper.execute("ipsec reload")
             #CsHelper.execute("ipsec --add vpn-%s" % rightpeer)
             if not obj['passive']:
-                CsHelper.execute("ipsec up vpn-%s" % rightpeer)
+                CsHelper.execute("sudo nohup ipsec up vpn-%s &" % rightpeer)
         os.chmod(vpnsecretsfile, 0400)
 
     def convert_sec_to_h(self, val):
