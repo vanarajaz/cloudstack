@@ -46,6 +46,48 @@ import java.util.UUID;
 
 import javax.naming.ConfigurationException;
 
+<<<<<<< HEAD
+=======
+import com.cloud.exception.InvalidParameterValueException;
+import com.cloud.storage.Storage;
+import com.cloud.storage.template.TemplateConstants;
+import com.cloud.utils.EncryptionUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpContentCompressor;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+
+import org.apache.cloudstack.storage.command.TemplateOrVolumePostUploadCommand;
+import org.apache.cloudstack.storage.template.UploadEntity;
+import org.apache.cloudstack.utils.imagestore.ImageStoreUtil;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.log4j.Logger;
+
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+
+>>>>>>> a90c9c100f7a8e62e461be84a5c560082ba23718
 import org.apache.cloudstack.framework.security.keystore.KeystoreManager;
 import org.apache.cloudstack.storage.command.CopyCmdAnswer;
 import org.apache.cloudstack.storage.command.CopyCommand;
@@ -146,6 +188,7 @@ import com.cloud.utils.script.OutputInterpreter;
 import com.cloud.utils.script.Script;
 import com.cloud.utils.storage.S3.S3Utils;
 import com.cloud.vm.SecondaryStorageVm;
+<<<<<<< HEAD
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -162,6 +205,11 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+=======
+
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
+>>>>>>> a90c9c100f7a8e62e461be84a5c560082ba23718
 
 public class NfsSecondaryStorageResource extends ServerResourceBase implements SecondaryStorageResource {
 
@@ -2305,7 +2353,13 @@ public class NfsSecondaryStorageResource extends ServerResourceBase implements S
             remoteDevice = nfsPath;
             s_logger.debug("Mounting device with nfs-style path of " + remoteDevice);
         }
+<<<<<<< HEAD
         mount(localRootPath, remoteDevice, uri, nfsVersion);
+=======
+
+        mount(localRootPath, remoteDevice, uri, nfsVersion);
+
+>>>>>>> a90c9c100f7a8e62e461be84a5c560082ba23718
         return dir;
     }
 

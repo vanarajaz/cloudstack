@@ -143,8 +143,11 @@ public class TemplateServiceImpl implements TemplateService {
     @Inject
     StorageCacheManager _cacheMgr;
     @Inject
+<<<<<<< HEAD
     MessageBus _messageBus;
     @Inject
+=======
+>>>>>>> a90c9c100f7a8e62e461be84a5c560082ba23718
     ImageStoreDetailsUtil imageStoreDetailsUtil;
 
     class TemplateOpContext<T> extends AsyncRpcContext<T> {
