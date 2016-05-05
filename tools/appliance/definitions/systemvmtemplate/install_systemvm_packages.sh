@@ -28,8 +28,8 @@ function install_vhd_util() {
 
 function debconf_packages() {
   echo 'sysstat sysstat/enable boolean true' | debconf-set-selections
-  echo "openswan openswan/install_x509_certificate boolean false" | debconf-set-selections
-  echo "openswan openswan/install_x509_certificate seen true" | debconf-set-selections
+  echo "strongswan strongswan/install_x509_certificate boolean false" | debconf-set-selections
+  echo "strongswan strongswan/install_x509_certificate seen true" | debconf-set-selections
   echo "iptables-persistent iptables-persistent/autosave_v4 boolean true" | debconf-set-selections
   echo "iptables-persistent iptables-persistent/autosave_v6 boolean true" | debconf-set-selections
 }
@@ -63,7 +63,7 @@ function install_packages() {
     nfs-common \
     samba-common cifs-utils \
     xl2tpd bcrelay ppp ipsec-tools tdb-tools \
-    openswan=1:2.6.37-3 \
+    strongswan \
     xenstore-utils libxenstore3.0 \
     conntrackd ipvsadm libnetfilter-conntrack3 libnl-3-200 libnl-genl-3-200 \
     ipcalc \
@@ -77,8 +77,6 @@ function install_packages() {
 
   ${apt_get} -t wheezy-backports install keepalived irqbalance open-vm-tools
 
-  # hold on installed openswan version, upgrade rest of the packages (if any)
-  apt-mark hold openswan
   apt-get update
   apt-get -y --force-yes upgrade
 
