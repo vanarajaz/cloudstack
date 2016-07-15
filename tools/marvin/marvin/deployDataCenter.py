@@ -36,6 +36,7 @@ from marvin.config.test_data import test_data
 from sys import exit
 import os
 import pickle
+import threading
 from time import sleep, strftime, localtime
 from optparse import OptionParser
 
@@ -197,7 +198,7 @@ class DeployDataCenters(object):
                 vmwareDc.zoneid = zoneId
                 self.addVmWareDataCenter(vmwareDc)
 
-            for cluster in clusters:
+            def createCluster(cluster):
                 clustercmd = addCluster.addClusterCmd()
                 clustercmd.clustername = cluster.clustername
                 clustercmd.clustertype = cluster.clustertype
@@ -223,6 +224,15 @@ class DeployDataCenters(object):
                                                zoneId,
                                                podId,
                                                clusterId)
+
+            threads = []
+            for cluster in clusters:
+                t = threading.Thread(target=createCluster, args=(cluster,))
+                t.start()
+                threads.append(t)
+
+            for t in threads:
+                t.join(1800)
 
         except Exception as e:
             print "Exception Occurred %s" % GetDetailExceptionInfo(e)
