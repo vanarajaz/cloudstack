@@ -32,6 +32,8 @@ function cleanup_veewee() {
 function zero_disk() {
   cleanup_veewee
 
+  df -h
+
   for path in / /boot /usr /var /var/log /opt /tmp /home
   do
     dd if=/dev/zero of=${path}/zero bs=1M || true
