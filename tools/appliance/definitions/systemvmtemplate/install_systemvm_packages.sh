@@ -74,7 +74,7 @@ function install_packages() {
     radvd \
     sharutils
 
-  ${apt_get} -t wheezy-backports install keepalived irqbalance open-vm-tools
+  ${apt_get} -t wheezy-backports install keepalived irqbalance open-vm-tools qemu-guest-agent
   ${apt_get} -t wheezy-backports install strongswan libcharon-extra-plugins libstrongswan-extra-plugins
 
   apt-get update
