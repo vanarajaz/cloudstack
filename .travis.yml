@@ -42,6 +42,10 @@ env:
              smoke/test_dynamicroles
              smoke/test_global_settings
              smoke/test_guest_vlan_range
+             smoke/test_ha_for_host
+             smoke/test_ha_kvm_agent
+             smoke/test_ha_kvm
+             smoke/test_hostha_simulator
              smoke/test_hosts
              smoke/test_internal_lb
              smoke/test_iso
@@ -49,6 +53,7 @@ env:
              smoke/test_loadbalance
              smoke/test_login
              smoke/test_multipleips_per_nic
+             smoke/test_nested_virtualization
              smoke/test_network
              smoke/test_network_acl
              smoke/test_nic

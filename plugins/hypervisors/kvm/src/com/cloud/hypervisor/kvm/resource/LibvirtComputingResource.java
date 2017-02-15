@@ -197,6 +197,7 @@ public class LibvirtComputingResource extends ServerResourceBase implements Serv
     private String _resizeVolumePath;
     private String _createTmplPath;
     private String _heartBeatPath;
+    private String _vmActivityCheckPath;
     private String _securityGroupPath;
     private String _ovsPvlanDhcpHostPath;
     private String _ovsPvlanVmPath;
@@ -443,6 +444,10 @@ public class LibvirtComputingResource extends ServerResourceBase implements Serv
         return _guestBridgeName;
     }
 
+    public String getVmActivityCheckPath() {
+        return _vmActivityCheckPath;
+    }
+
     public String getOvsPvlanDhcpHostPath() {
         return _ovsPvlanDhcpHostPath;
     }
@@ -681,6 +686,11 @@ public class LibvirtComputingResource extends ServerResourceBase implements Serv
         _resizeVolumePath = Script.findScript(storageScriptsDir, "resizevolume.sh");
         if (_resizeVolumePath == null) {
             throw new ConfigurationException("Unable to find the resizevolume.sh");
+        }
+
+        _vmActivityCheckPath = Script.findScript(kvmScriptsDir, "kvmvmactivity.sh");
+        if (_vmActivityCheckPath == null) {
+            throw new ConfigurationException("Unable to find kvmvmactivity.sh");
         }
 
         _createTmplPath = Script.findScript(storageScriptsDir, "createtmplt.sh");
