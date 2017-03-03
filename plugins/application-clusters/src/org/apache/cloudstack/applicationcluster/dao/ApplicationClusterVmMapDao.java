@@ -14,22 +14,13 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-package com.cloud.network.lb;
+package org.apache.cloudstack.applicationcluster.dao;
 
-import org.apache.cloudstack.acl.ControlledEntity;
-import org.apache.cloudstack.api.Identity;
-import org.apache.cloudstack.api.InternalIdentity;
+import org.apache.cloudstack.applicationcluster.ApplicationClusterVmMapVO;
+import com.cloud.utils.db.GenericDao;
 
-public interface SslCert extends InternalIdentity, Identity, ControlledEntity {
+import java.util.List;
 
-    public String getCertificate();
-
-    public String getKey();
-
-    public String getChain();
-
-    public String getPassword();
-
-    public String getFingerPrint();
-
+public interface ApplicationClusterVmMapDao extends GenericDao<ApplicationClusterVmMapVO, Long> {
+    public List<ApplicationClusterVmMapVO> listByClusterId(long clusterId);
 }

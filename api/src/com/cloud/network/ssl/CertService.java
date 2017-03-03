@@ -14,8 +14,9 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-package com.cloud.network.lb;
+package com.cloud.network.ssl;
 
+import java.security.cert.Certificate;
 import java.util.List;
 
 import org.apache.cloudstack.api.command.user.loadbalancer.DeleteSslCertCmd;
@@ -30,4 +31,6 @@ public interface CertService {
     public void deleteSslCert(DeleteSslCertCmd deleteSslCertCmd);
 
     public List<SslCertResponse> listSslCerts(ListSslCertsCmd listSslCertCmd);
+
+    public Certificate parseCertificate(final String cert);
 }
