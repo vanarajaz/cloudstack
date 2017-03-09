@@ -325,7 +325,7 @@ public class ApplicationClusterManagerImpl extends ManagerBase implements Applic
             }
         }
 
-        if (!isContainerServiceConfigured(zone)) {
+        if (!isApplicationClusterServiceConfigured(zone)) {
             throw new ManagementServerException("Container service has not been configured properly to provision container clusters.");
         }
 
@@ -1598,7 +1598,7 @@ public class ApplicationClusterManagerImpl extends ManagerBase implements Applic
         return sw.getBuffer().toString();
     }
 
-    private boolean isContainerServiceConfigured(DataCenter zone) {
+    private boolean isApplicationClusterServiceConfigured(DataCenter zone) {
 
         String templateName = _globalConfigDao.getValue(ApplicationClusterConfig.ApplicationClusterTemplateName.key());
         if (templateName == null || templateName.isEmpty()) {
