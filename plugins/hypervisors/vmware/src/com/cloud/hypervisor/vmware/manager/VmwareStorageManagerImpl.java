@@ -1479,4 +1479,22 @@ public class VmwareStorageManagerImpl implements VmwareStorageManager {
     private static String getVolumeRelativeDirInSecStroage(long volumeId) {
         return "volumes/" + volumeId;
     }
+
+    /**
+     * This task is to cleanup templates from primary storage that are otherwise not cleaned by the {@link com.cloud.storage.StorageManagerImpl.StorageGarbageCollector}.
+     * it is called at regular intervals when storage.template.cleanup.enabled == true
+     * It collect all templates that
+     * - are deleted from cloudstack
+     * - when vmware.create.full.clones == true and the entries for VMs having volumes on the primary storage in db table “user_vm_clone_setting” reads 'full'
+     */
+    @Override
+    public Runnable getCleanupFullyClonedTemplatesTask() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                // TODO whatever is in the javadoc
+            }
+        };
+    }
+
 }

@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.naming.ConfigurationException;
 
+import com.cloud.storage.StorageManager;
 import org.apache.log4j.Logger;
 
 import com.vmware.vim25.AboutInfo;
@@ -200,6 +201,7 @@ public class VmwareManagerImpl extends ManagerBase implements VmwareManager, Vmw
     private final GlobalLock _exclusiveOpLock = GlobalLock.getInternLock("vmware.exclusive.op");
 
     private final ScheduledExecutorService _hostScanScheduler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("Vmware-Host-Scan"));
+    private final ScheduledExecutorService _templateCleanupScheduler = Executors.newScheduledThreadPool(1, new NamedThreadFactory("Vmware-Full-Cloned-Template-Cleanup"));
 
     public VmwareManagerImpl() {
         _storageMgr = new VmwareStorageManagerImpl(this);
@@ -212,7 +214,7 @@ public class VmwareManagerImpl extends ManagerBase implements VmwareManager, Vmw
 
     @Override
     public ConfigKey<?>[] getConfigKeys() {
-        return new ConfigKey<?>[] {s_vmwareNicHotplugWaitTimeout};
+        return new ConfigKey<?>[] {s_vmwareNicHotplugWaitTimeout, templateCleanupInterval};
     }
 
     @Override
@@ -323,14 +325,19 @@ public class VmwareManagerImpl extends ManagerBase implements VmwareManager, Vmw
 
     @Override
     public boolean start() {
-        _hostScanScheduler.scheduleAtFixedRate(getHostScanTask(), STARTUP_DELAY, _hostScanInterval, TimeUnit.MILLISECONDS);
+// Do not run empty task        _hostScanScheduler.scheduleAtFixedRate(getHostScanTask(), STARTUP_DELAY, _hostScanInterval, TimeUnit.MILLISECONDS);
+// but implement it first!
 
+        if(StorageManager.StorageCleanupEnabled.value() && StorageManager.TemplateCleanupEnabled.value()) {
+            _templateCleanupScheduler.scheduleAtFixedRate(getStorageManager().getCleanupFullyClonedTemplatesTask(), STARTUP_DELAY, templateCleanupInterval.value(), TimeUnit.MINUTES);
+        }
         startupCleanup(_mountParent);
         return true;
     }
 
     @Override
     public boolean stop() {
+        _templateCleanupScheduler.shutdown();
         _hostScanScheduler.shutdownNow();
         try {
             _hostScanScheduler.awaitTermination(3000, TimeUnit.MILLISECONDS);

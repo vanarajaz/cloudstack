@@ -54,4 +54,6 @@ public interface VmwareStorageManager {
     public void createOva(String path, String name);
 
     public String createOvaForTemplate(TemplateObjectTO template);
+
+    Runnable getCleanupFullyClonedTemplatesTask();
 }
