@@ -16,33 +16,6 @@
 // under the License.
 package com.cloud.hypervisor.vmware.manager;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-
-import org.apache.log4j.Logger;
-
-import com.vmware.vim25.FileInfo;
-import com.vmware.vim25.FileQueryFlags;
-import com.vmware.vim25.HostDatastoreBrowserSearchResults;
-import com.vmware.vim25.HostDatastoreBrowserSearchSpec;
-import com.vmware.vim25.ManagedObjectReference;
-import com.vmware.vim25.TaskInfo;
-import com.vmware.vim25.TaskInfoState;
-import com.vmware.vim25.VirtualDisk;
-
-import org.apache.cloudstack.storage.to.TemplateObjectTO;
-import org.apache.cloudstack.storage.to.VolumeObjectTO;
-
 import com.cloud.agent.api.Answer;
 import com.cloud.agent.api.BackupSnapshotAnswer;
 import com.cloud.agent.api.BackupSnapshotCommand;
@@ -90,6 +63,30 @@ import com.cloud.utils.exception.CloudRuntimeException;
 import com.cloud.utils.script.Script;
 import com.cloud.vm.VirtualMachine;
 import com.cloud.vm.snapshot.VMSnapshot;
+import com.vmware.vim25.FileInfo;
+import com.vmware.vim25.FileQueryFlags;
+import com.vmware.vim25.HostDatastoreBrowserSearchResults;
+import com.vmware.vim25.HostDatastoreBrowserSearchSpec;
+import com.vmware.vim25.ManagedObjectReference;
+import com.vmware.vim25.TaskInfo;
+import com.vmware.vim25.TaskInfoState;
+import com.vmware.vim25.VirtualDisk;
+import org.apache.cloudstack.storage.to.TemplateObjectTO;
+import org.apache.cloudstack.storage.to.VolumeObjectTO;
+import org.apache.log4j.Logger;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
 public class VmwareStorageManagerImpl implements VmwareStorageManager {
 
@@ -1485,16 +1482,10 @@ public class VmwareStorageManagerImpl implements VmwareStorageManager {
      * it is called at regular intervals when storage.template.cleanup.enabled == true
      * It collect all templates that
      * - are deleted from cloudstack
-     * - when vmware.create.full.clones == true and the entries for VMs having volumes on the primary storage in db table “user_vm_clone_setting” reads 'full'
+     * - when vmware.create.full.clone == true and the entries for VMs having volumes on the primary storage in db table “user_vm_clone_setting” reads 'full'
      */
     @Override
     public Runnable getCleanupFullyClonedTemplatesTask() {
-        return new Runnable() {
-            @Override
-            public void run() {
-                // TODO whatever is in the javadoc
-            }
-        };
+        return new CleanupFullyClonedTemplatesTask();
     }
-
 }
